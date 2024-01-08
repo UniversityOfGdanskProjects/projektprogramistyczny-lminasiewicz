@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, request
+import os
+from flask import Flask, jsonify
 from neo4j import GraphDatabase
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -24,9 +24,9 @@ def get_data(tx):
     if not results:
         return None
     else:
-       data = [result["n"] for result in results]
-       print(data)
-       return data
+        data = [result["n"] for result in results]
+        print(data)
+        return data
 
 
 @app.route("/api/db", methods=["GET"])
@@ -37,7 +37,7 @@ def get_data_route():
         return jsonify(data), 200
     else:
         return {}, 200
-    
+
 
 # GET ALL POSTS (NO FILTERS)
 
