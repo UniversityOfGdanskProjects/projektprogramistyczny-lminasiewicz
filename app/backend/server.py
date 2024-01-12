@@ -1,6 +1,8 @@
 import os
-from flask import Flask, jsonify
+import re
+from flask import Flask, request, jsonify
 from neo4j import GraphDatabase
+from neo4j.time import Date
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,12 +15,16 @@ password = os.getenv("NEO4J_PASSWORD")
 auth = (user, password)
 driver = GraphDatabase.driver(uri, auth=auth, database="neo4j")
 
+### ------------ HELPER FUNCTIONS ------------- ###
+
+
+
 
 ### ------------ GET ENDPOINTS ------------- ###
 
 # GET ALL NODES
 
-def get_data(tx):
+def get_data(tx) -> dict:
     query = "match (n) return n"
     results = tx.run(query).data()
     if not results:
@@ -41,26 +47,59 @@ def get_data_route():
 
 # GET ALL POSTS (NO FILTERS)
 
-def get_posts(tx):
+def get_posts(tx) -> dict:
     query = "match (p:Post) return p"
     results = tx.run(query).data()
     if not results:
         return None
     else:
-        return results
+        return [{"title": result["p"]["title"], "content": result["p"]["content"], "link": result["p"]["link"], "date": str(result["p"]["date"]), "tags": result["p"]["tags"]} for result in results]
 
 
 @app.route("/api/posts", methods=["GET"])
 def get_posts_route():
     posts = driver.session().execute_read(get_posts)
     print("Received a GET request on endpoint /api/posts")
-    return {"posts": jsonify(posts)}, 200
+    print(jsonify(posts))
+    return {"posts": posts}, 200
 
 
 # GET ALL POSTS (FILTERED WITH TAGS AND DATE)
 
-#def get_filtered_posts(tx, tags: list[str], before: str|None, after: str|None):
+def get_filtered_posts(tx, tags: list[str], before: str|None = None, after: str = "1970-01-01") -> dict:
+    query = f"match (p:Post) where any(tag in p.tags where tag in {tags}) and p.date > Date(\"{after}\") and p.date > Date(\"{before}\") return p"
+    if not before:
+        query = f"match (p:Post) where any(tag in p.tags where tag in {tags}) and p.date > Date(\"{after}\") return p"
+    results = tx.run(query).data()
+    return [{"title": result["p"]["title"], "content": result["p"]["content"], "link": result["p"]["link"], "date": str(result["p"]["date"]), "tags": result["p"]["tags"]} for result in results]
 
+
+@app.route("/api/posts/filters", methods=["GET"])
+def get_filtered_posts_route():
+    tags = request.args.get("tags").split(",")
+    after = request.args.get("after", "1970-01-01")
+    before = request.args.get("before", None)
+    print("after:", after)
+    if re.match("[0-9]{4}-[0-9]{2}-[0-9]{2}", after) and (not before or re.match("[0-9]{4}-[0-9]{2}-[0-9]{2}", before)):
+        posts = driver.session().execute_read(get_filtered_posts, tags, before, after)
+        print(f"Received a GET request on endpoint /api/posts/filters with parameters: tags={','.join(tags)} after={after} before={before}")
+        return {"posts": posts}, 200
+    return None, 400
+
+
+# GET ALL USERS
+
+def get_users(tx):
+    query = "match (u:User) return u"
+    results = tx.run(query).data()
+    return results
+
+
+@app.route("/api/users", methods=["GET"])
+def get_users_route():
+    posts = driver.session().execute_read(get_users)
+    print("Received a GET request on endpoint /api/users")
+    return {"posts": jsonify(posts)}, 200
 
 
 # GET COMMENTS BY USERNAME (WITH LINKS TO RELEVANT POST)
@@ -79,9 +118,9 @@ def get_comments_by_username(tx, username: str) -> list[dict]:
         links = list(map(lambda id: get_link(id), [result["id(c)"] for result in results]))
         def rec_merge(comments, links, counter, acc=[]):
             if counter > 0:
-                return rec_merge(comments[:-1], links[:-1], counter-1, 
-                                 acc+[{"id": comments[counter-1]["id(c)"], "date": comments[counter-1]["c"]["date"],
-                                       "content": comments[counter-1]["c"]["content"], "original_post": links[counter-1]["p.link"]}])
+                return rec_merge(comments[:-1], links[:-1], counter-1, acc+[{
+                    "id": comments[counter-1]["id(c)"], "date": comments[counter-1]["c"]["date"],
+                    "content": comments[counter-1]["c"]["content"], "original_post": links[counter-1]["p.link"]}])
             else:
                 return acc
         
