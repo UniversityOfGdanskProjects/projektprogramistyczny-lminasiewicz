@@ -89,7 +89,7 @@ def get_filtered_posts_route():
 
 # GET ALL USERS
 
-def get_users(tx):
+def get_users(tx) -> list[dict]:
     query = "match (u:User) return u"
     results = tx.run(query).data()
     return results
@@ -100,6 +100,28 @@ def get_users_route():
     posts = driver.session().execute_read(get_users)
     print("Received a GET request on endpoint /api/users")
     return {"posts": jsonify(posts)}, 200
+
+
+# GET USERNAME & EMAIL VERIFICATION
+
+def get_verification(tx, username: str = "", email: str = "") -> bool:
+    query = f"match (u:User) where u.email = \"{email}\" or u.username = \"{username}\" return u"
+    if username == "" and email == "":
+        return False
+    results = tx.run(query).data()
+    if len(results) == 0:
+        return True
+    else:
+        return False
+
+
+@app.route("/api/verify", methods=["GET"])
+def get_verification_route():
+    username = request.args.get("username", "")
+    email = request.args.get("email", "")
+    available = driver.session().execute_read(get_verification, username, email)
+    print(f"Received a GET request on endpoint /api/verify with parameters: username=\"{username if username!='' else '<default:none>'}\" email=\"{email if email!='' else '<default:none>'}\" ")
+    return {"verification": available}, 200
 
 
 # GET COMMENTS BY USERNAME (WITH LINKS TO RELEVANT POST)
@@ -134,6 +156,39 @@ def get_comments_by_username_route(username: str):
     comments = driver.session().execute_read(get_comments_by_username, username)
     print(f"Received a GET request on endpoint /api/{username}/comments")
     return jsonify({"comments": comments}), 200
+
+
+# GET COUNT OF COMMENTS ON THE WEBSITE
+
+def get_count_comments(tx) -> int:
+    query = "match (c:Comment) return count(c)"
+    results = tx.run(query).data()
+    return results
+
+
+@app.route("/api/comments/count", methods=["GET"])
+def get_count_comments_route():
+    count = driver.session().execute_read(get_count_comments)
+    print("Received a GET request on endpoint /api/comments/count")
+    return {"count": count}, 200
+
+
+# GET COUNT OF REGISTERED USERS
+
+def get_count_users(tx) -> int:
+    query = "match (u:Users) return count(u)"
+    results = tx.run(query).data()
+    return results
+
+
+@app.route("/api/users/count", methods=["GET"])
+def get_count_users_route():
+    count = driver.session().execute_read(get_count_users)
+    print("Received a GET request on endpoint /api/users/count")
+    return {"count": count}, 200
+
+
+
 
 
 
