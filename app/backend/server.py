@@ -2,8 +2,8 @@ import os
 import re
 from flask import Flask, request, jsonify
 from neo4j import GraphDatabase
-from neo4j.time import Date
 from dotenv import load_dotenv
+from helper_functions import *
 
 load_dotenv()
 
@@ -14,10 +14,6 @@ user = os.getenv("NEO4J_USERNAME")
 password = os.getenv("NEO4J_PASSWORD")
 auth = (user, password)
 driver = GraphDatabase.driver(uri, auth=auth, database="neo4j")
-
-### ------------ HELPER FUNCTIONS ------------- ###
-
-
 
 
 ### ------------ GET ENDPOINTS ------------- ###
@@ -185,6 +181,21 @@ def get_count_users(tx) -> int:
 def get_count_users_route():
     count = driver.session().execute_read(get_count_users)
     print("Received a GET request on endpoint /api/users/count")
+    return {"count": count}, 200
+
+
+# GET COUNT OF POSTS ON THE WEBSITE
+
+def get_count_posts(tx) -> int:
+    query = "match (p:Post) return count(p)"
+    results = tx.run(query).data()
+    return results
+
+
+@app.route("/api/posts/count", methods=["GET"])
+def get_count_posts_route():
+    count = driver.session().execute_read(get_count_posts)
+    print("Received a GET request on endpoint /api/posts/count")
     return {"count": count}, 200
 
 
