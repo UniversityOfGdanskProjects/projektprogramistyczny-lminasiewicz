@@ -44,12 +44,12 @@ def get_data_route():
 # GET ALL POSTS (NO FILTERS)
 
 def get_posts(tx) -> dict:
-    query = "match (p:Post) return p"
+    query = "match (p:Post) return p, id(p)"
     results = tx.run(query).data()
     if not results:
         return None
     else:
-        return [{"title": result["p"]["title"], "content": result["p"]["content"], "link": result["p"]["link"], "date": str(result["p"]["date"]), "tags": result["p"]["tags"]} for result in results]
+        return [{"id": result["id(p)"], "title": result["p"]["title"], "content": result["p"]["content"], "link": result["p"]["link"], "date": str(result["p"]["date"]), "tags": result["p"]["tags"]} for result in results]
 
 
 @app.route("/api/posts", methods=["GET"])
@@ -198,6 +198,53 @@ def get_count_posts_route():
     print("Received a GET request on endpoint /api/posts/count")
     return {"count": count}, 200
 
+
+# GET POST BY ID
+
+def get_post_by_id(tx, id: int) -> dict:
+    query = f"match (p:Post) where id(p) = {id} return p"
+    results = tx.run(query).data()
+    if results:
+        return {"title": results[0]["p"]["title"], "content": results[0]["p"]["content"], "link": results[0]["p"]["link"], "date": str(results[0]["p"]["date"]), "tags": results[0]["p"]["tags"]}
+
+
+@app.route("/api/posts/<int:id>", methods=["GET"])
+def get_post_by_id_route(id: int):
+    post = driver.session().execute_read(get_post_by_id, id)
+    print(f"Received a GET request on endpoint /api/posts/{id}")
+    return {"post": post}, 200 
+
+
+# GET COMMENTS BY POST ID OF THE POST THEY'RE UNDER
+
+def get_comments_by_post_id(tx, id: int) -> list[dict]:
+    query = f"match (u:User)-[:WROTE]->(c:Comment)-[:RESPONDS_TO]->(p:Post) where id(p) = {id} return u.username, id(c), c"
+    results = tx.run(query).data()
+    if results:
+        return [{"author": result["u.username"], "id": result["id(c)"], "date": str(result["c"]["date"]), "content": result["c"]["content"]} for result in results]
+
+
+@app.route("/api/comments/byPost/<int:id>", methods=["GET"])
+def get_comments_by_post_id_route(id: int):
+    comments = driver.session().execute_read(get_comments_by_post_id, id)
+    print(f"Received a GET request on endpoint /api/comments/byPost/{id}")
+    return {"comments": comments}, 200 
+
+
+# GET COMMENTS BY COMMENT ID OF THE COMMENT THEY'RE UNDER
+
+def get_comments_by_comment_id(tx, id: int) -> list[dict]:
+    query = f"match (u:User)-[:WROTE]->(c:Comment)-[:RESPONDS_TO]->(c2:Comment) where id(c2) = {id} return u.username, id(c), c"
+    results = tx.run(query).data()
+    if results:
+        return [{"author": result["u.username"], "id": result["id(c)"], "date": str(result["c"]["date"]), "content": result["c"]["content"]} for result in results]
+
+
+@app.route("/api/comments/byComment/<int:id>", methods=["GET"])
+def get_comments_by_comment_id_route(id: int):
+    comments = driver.session().execute_read(get_comments_by_comment_id, id)
+    print(f"Received a GET request on endpoint /api/comments/byComment/{id}")
+    return {"comments": comments}, 200 
 
 
 
