@@ -20,4 +20,25 @@ Content-Type: application/json
 
 ###
 
-DELETE http://127.0.0.1:5000/api/users/logout?username=User4&token=90aeb16e-351a-45ce-8ced-abcba3977609
+DELETE http://127.0.0.1:5000/api/users/logout?username=User4&token=e8c9d7fc-9460-4fd4-9e5d-b1441e735dea
+
+###
+
+POST http://127.0.0.1:5000/comments/submit?username=User4&token=aca07814-5a2c-4d75-b834-67691ddc9b16
+Content-Type: application/json
+
+{
+    "content": "POGGERS2!!!!!!!",
+    "under": 0
+}
+
+###
+
+POST http://127.0.0.1:5000/posts/submit?username=Admin&token=12321
+Content-Type: application/json
+
+{
+    "title": "gaming!",
+    "content": "HOOOOOOAAAAAAAAAAAAAAAA HOOooOOH Hooooaaaaaa hoooaaa hooa hooh hoooooooooooooooooooooooaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "tags": ["personal"]
+}

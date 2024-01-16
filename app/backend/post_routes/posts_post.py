@@ -16,18 +16,18 @@ bp_ppost = Blueprint("bp_ppost", __name__)
 def post_submit(tx, token: str, username: str, title: str, content: str, tags: str) -> str:
     if authenticate_token(tx, token, username):
         date = datetime.date.today()
-        query = f"match (n) return id(n)"
+        query = f"match (n) return id(n) order by id(n) desc limit 1"
         id = int(tx.run(query).data()[0]["id(n)"]) + 1
         link = f"/posts/{id}"
-        query2 = f"create (p:Post {{title: {title}, content: {content}, tags: {tags}, date: {date}, link: {link}}})"
+        query2 = f"create (p:Post {{title: \"{title}\", content: \"{content}\", tags: \"{tags}\", date: Date(\"{date}\"), link: \"{link}\"}})"
         _ = tx.run(query2)
-        query3 = f"match (u:User) where u.username = {username}\nmatch (p:Post) where id(p) = {id}\ncreate (u)-[:WROTE]->(p)"
+        query3 = f"match (u:User) where u.username = \"{username}\" match (p:Post) where id(p) = {id} create (u)-[:WROTE]->(p)"
         _ = tx.run(query3)
         return "Successfully Created Post"
     return "Error"
 
 
-@bp_ppost.route("/post/submit", methods=["POST"])
+@bp_ppost.route("/posts/submit", methods=["POST"])
 def post_submit_route():
     username = request.args.get("username")
     token = request.args.get("token")
