@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import datetime
 from flask import Blueprint, request, jsonify
 
 sys.path.append("..")
@@ -8,3 +9,31 @@ from db_connection import driver
 from helper_functions import *
 
 bp_cpost = Blueprint("bp_cpost", __name__)
+
+
+# POST A COMMENT ONTO THE WEBSITE
+
+def post_comment_submit(tx, token: str, username: str, content: str, under: int) -> str:
+    if authenticate_token(tx, token, username):
+        date = datetime.date.today()
+        query = f"match (n) return id(n)"
+        id = int(tx.run(query).data()[0]["id(n)"]) + 1
+        query2 = f"create (c:Comment {{content: {content}, date: {date}}})"
+        _ = tx.run(query2)
+        query3 = f"match (u:User) where u.username = {username}\nmatch (p:Post) where id(p) = {id}\ncreate (u)-[:WROTE]->(p)"
+        _ = tx.run(query3)
+        query4 = f"match (c:Comment) where id(c)={id}\nmatch (x) where id(x)={under}\ncreate (c)-[:RESPONDS_TO]->(x)"
+        return "Successfully Created Comment"
+    return "Error"
+
+
+@bp_cpost.route("/comments/submit", methods=["POST"])
+def post_comment_submit_route():
+    username = request.args.get("username")
+    token = request.args.get("token")
+    req = request.json
+    title = req["content"]
+    under = req["under"]
+    result = driver.session().execute_write(post_comment_submit, token, username, title, under)
+    print("Received a POST request on endpoint /post/submit")
+    return result, 200
