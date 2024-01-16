@@ -4,9 +4,20 @@ POST http://127.0.0.1:5000/api/users/login
 Content-Type: application/json
 
 {
-    "login": "User2",
-    "password": "Password2"
+    "login": "User4",
+    "password": "Password4"
 }
 
+###
+
+POST http://127.0.0.1:5000/api/users/signup
+Content-Type: application/json
+
+{
+    "username": "User4",
+    "password": "Password4"
+}
 
 ###
+
+DELETE http://127.0.0.1:5000/api/users/logout?username=User4&token=90aeb16e-351a-45ce-8ced-abcba3977609

@@ -17,9 +17,12 @@ def create_token(tx) -> str:
         query = "call apoc.create.uuids(1)"
         results = tx.run(query).data()[0]["uuid"]
         query2 = "match (a:Authentication) return a.token"
-        results2 = tx.run(query).data()
-        parsed_results2 = [result["a.token"] for result in results2]
-        if results not in parsed_results2:
+        results2 = tx.run(query2).data()
+        if len(results2) != 0:
+            parsed_results2 = [result["a.token"] for result in results2]
+            if results not in parsed_results2:
+                unique = True
+        else:
             unique = True
     return results
 
@@ -34,4 +37,4 @@ def hash_password(pwd: str) -> str:
 
 
 def check_password(pwd: str, hashed: str) -> bool:
-    return checkpw(pwd.encode("utf-8"), hashed)
+    return checkpw(pwd.encode("utf-8"), hashed[2:-1].encode("utf-8"))
