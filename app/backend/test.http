@@ -42,3 +42,19 @@ Content-Type: application/json
     "content": "HOOOOOOAAAAAAAAAAAAAAAA HOOooOOH Hooooaaaaaa hoooaaa hooa hooh hoooooooooooooooooooooooaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "tags": ["personal"]
 }
+
+###
+
+GET  http://127.0.0.1:5000/api/users/search?phrase=ser
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:5000/posts/edit/14?username=Admin&token=12321
+Content-Type: application/json
+
+{
+    "title": "gaming.",
+    "content": "HOOooOOH Hooooaaaaaa hoooaaa hooa hooh hoooooooooooooooooooooooaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "tags": ["personal"]
+}

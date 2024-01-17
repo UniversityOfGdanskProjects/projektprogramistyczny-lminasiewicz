@@ -41,3 +41,19 @@ def get_count_users_route():
     print("Received a GET request on endpoint /api/users/count")
     return {"count": count}, 200
 
+
+
+# GET USERS BY SEARCHED PHRASE
+
+def get_users_search(tx, search: str) -> list[dict]:
+    query = f"match (u:User) where toLower(u.username) contains \"{search}\" return u"
+    results = tx.run(query).data()
+    return [{"username": result["u"]["username"], "link": result["u"]["link"], "registered": str(result["u"]["registered"])} for result in results]
+
+
+@bp_uget.route("/api/users/search", methods=["GET"])
+def get_users_search_route():
+    search = request.args.get("phrase")
+    posts = driver.session().execute_read(get_users_search, search)
+    print("Received a GET request on endpoint /api/users/search")
+    return {"users": posts}, 200
