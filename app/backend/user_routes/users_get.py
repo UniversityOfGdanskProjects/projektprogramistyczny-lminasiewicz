@@ -57,3 +57,19 @@ def get_users_search_route():
     posts = driver.session().execute_read(get_users_search, search)
     print("Received a GET request on endpoint /api/users/search")
     return {"users": posts}, 200
+
+
+
+# GET USER BY USERNAME
+
+def get_user_by_username(tx, username) -> dict:
+    query = f"match (u:User) where u.username = \"{username}\" return u"
+    results = tx.run(query).data()
+    return [{"username": result["u"]["username"], "link": result["u"]["link"], "registered": str(result["u"]["registered"])} for result in results]
+
+
+@bp_uget.route("/api/users/user/<username>", methods=["GET"])
+def get_user_by_username_route(username):
+    posts = driver.session().execute_read(get_user_by_username, username)
+    print(f"Received a GET request on endpoint /api/users/user/{username}")
+    return {"users": posts}, 200

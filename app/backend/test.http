@@ -58,3 +58,10 @@ Content-Type: application/json
     "content": "HOOooOOH Hooooaaaaaa hoooaaa hooa hooh hoooooooooooooooooooooooaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "tags": ["personal"]
 }
+
+###
+
+DELETE http://127.0.0.1:5000/posts/delete/0?username=Admin&token=12321
+
+###
+

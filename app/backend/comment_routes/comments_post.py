@@ -16,7 +16,8 @@ bp_cpost = Blueprint("bp_cpost", __name__)
 def post_comment_submit(tx, token: str, username: str, content: str, under: int) -> str:
     if authenticate_token(tx, token, username):
         date = datetime.date.today()
-        query = f"create (c:Comment {{content: \"{content}\", date: Date(\"{date}\")}})"
+        deleted = "false"
+        query = f"create (c:Comment {{content: \"{content}\", date: Date(\"{date}\"), deleted: {deleted}}})"
         _ = tx.run(query)
         query2 = f"match (n) return id(n) order by id(n) desc limit 1"
         id = int(tx.run(query2).data()[0]["id(n)"])
