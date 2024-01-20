@@ -1,0 +1,65 @@
+@font-face {
+  font-family: "Comfortaa";
+  src: url("../public/Comfortaa-VariableFont_wght.ttf") format("ttf");
+}
+
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
+body {
+  background-color: #101010;
+  font-family: "Comfortaa"
+}
+
+#navbar {
+  position: fixed;
+  top: 0;
+  font-size: 1.5em;
+  height: 4em;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  padding: 0em 0em 0em 0em;
+  border-bottom: 1px solid #505050;
+}
+
+.flex-generic {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-link {
+  display: flex;
+  text-align: center;
+  height: 4em;
+  padding: 0 1.5em 0 1.5em;
+  text-decoration: none;
+  color: gray;
+  &.b-left {
+    border-left: 1px solid #505050;
+  }
+  &.b-right {
+    border-right: 1px solid #505050;
+  }
+}
+
+.flex-horizontal-left {
+  align-self: flex-start;
+}
+
+.flex-horizontal-right {
+  align-self: flex-end;
+}
+
+.logo {
+  height: 4em;
+  aspect-ratio: 1/1;
+  background-image: url("../public/loho3.png");
+  background-size: 4em;
+  padding: 0;
+}
+
+.page-name {
+  font-size: 1.5em;
+  color: lightgray;
+}
