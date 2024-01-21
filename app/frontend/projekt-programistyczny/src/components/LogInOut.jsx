@@ -4,9 +4,10 @@ import { useState } from 'react';
 import ProfileButton from "./ProfileButton";
 
 export default function LogInOut() {
+    const navigate = useNavigate();
     if (!localStorage.getItem("loggedIn")) {
         return (
-            <div className="navbar-link b-left"><div className="flex-generic">Log In</div></div>
+            <div className="navbar-link navbar-hover b-left b-right"><div className="flex-generic" onClick={() => navigate("/login")}>Log In</div></div>
         )
     }
     else {

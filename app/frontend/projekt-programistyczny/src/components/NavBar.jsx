@@ -13,9 +13,9 @@ export default function NavBar() {
             </div>
             
             <div className="flex-horizontal-right flex-generic">
-                <div className="navbar-link b-left" href=""><div className="flex-generic">Posts</div></div>
-                <div className="navbar-link b-left" href=""><div className="flex-generic">Users</div></div>
-                <div className="navbar-link b-left" href=""><div className="flex-generic">About</div></div>
+                <div className="navbar-link navbar-hover b-left" href=""><div className="flex-generic">Posts</div></div>
+                <div className="navbar-link navbar-hover b-left" href=""><div className="flex-generic">Users</div></div>
+                <div className="navbar-link navbar-hover b-left" href=""><div className="flex-generic">About</div></div>
                 <LogInOut/>
             </div>
         </div>

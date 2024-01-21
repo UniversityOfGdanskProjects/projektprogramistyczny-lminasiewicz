@@ -11,21 +11,50 @@ body {
 }
 
 #navbar {
+  background-color: rgba(10, 10, 10, 0.85);
   position: fixed;
   top: 0;
   font-size: 1.5em;
   height: 4em;
-  width: 100vw;
+  width: calc(100vw - 1.5em);
   display: flex;
   justify-content: space-between;
-  padding: 0em 0em 0em 0em;
+  padding: 0em 1.5em 0em 0em;
   border-bottom: 1px solid #505050;
+}
+
+#footer {
+  height: 20em;
+  width: 100vw;
+  background: linear-gradient(#101010, #001820, #001820);
+  justify-content: space-around;
+}
+
+.footer-link {
+  display: block;
+  text-align: center;
+  font-size: 1.5em;
+  color:#a0a0a0;
+  :hover {
+    color: lightgray;
+    text-shadow: 2px 2px 10px gray;
+  }
+  a {
+    text-decoration: none;
+    color:gray;
+  }
 }
 
 .flex-generic {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.flex-vertical {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .navbar-link {
@@ -35,11 +64,19 @@ body {
   padding: 0 1.5em 0 1.5em;
   text-decoration: none;
   color: gray;
+  transition: ease-in-out 50ms;
+  user-select: none;
   &.b-left {
     border-left: 1px solid #505050;
   }
   &.b-right {
     border-right: 1px solid #505050;
+  }
+  &.navbar-hover:hover {
+    transition: ease-in-out 50ms;
+    background-color: #282828;
+    color: #a0a0a0;
+    cursor: pointer;
   }
 }
 
@@ -62,4 +99,132 @@ body {
 .page-name {
   font-size: 1.5em;
   color: lightgray;
+}
+
+
+
+.page {
+  position: static;
+  &.main-page-intro {
+    height: 55vw;
+  }
+  .main-image {
+    position: absolute;
+    object-fit: fill;
+    width: 100vw;
+    aspect-ratio: 12/7;
+    z-index: -5;
+  }
+  .image-coverer {
+    position: absolute;
+    top: 10vh;
+    left: 0;
+    width: 115vw;
+    aspect-ratio: 12/7;
+    background: linear-gradient(rgba(10, 10, 10, 0), #101010, #101010);
+    transform: rotate(-10deg) translateX(-5vw);
+    z-index: -2;
+  }
+  .main-title {
+    position: absolute;
+    top: 20vw;
+    left: 10vw;
+    color: white;
+    text-shadow: 4px 4px 10px #101010;
+    z-index: -1;
+    .main-title {
+      position: static;
+      font-size: 5vw;
+    }
+    .main-subtitle {
+      margin-left: 20vw;
+      position: static;
+      font-size: 1.5vw;
+    }
+  }
+}
+
+.main-page-mid  {
+  display: flex;
+  height: 30vw;
+  justify-content: space-around;
+  color: white;
+  .main-paragraph {
+    .main-text {
+      margin-left: 15%;
+    }
+    .main-button {
+      margin-left: 60%;
+    }
+  }
+}
+
+.main-page-end {
+  margin-top: 20em;
+  display: flex;
+  height: 30vw;
+  justify-content: space-around;
+  color: white;
+  margin-bottom: 10em;
+  .main-paragraph {
+    h1 {
+      margin-left: 15%
+    }
+    .main-button {
+      margin-left: 45%;
+    }
+  }
+}
+
+.main-paragraph {
+  height: 100%;
+  width: 35%;
+}
+
+.main-image {
+  height: 100%;
+  width: 35%;
+  img {
+    transition: ease-in-out 150ms;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 4em;
+  }
+}
+
+h1 {
+  font-weight: normal;
+  font-size: 1.5vw;
+  margin-bottom: 2em;
+}
+
+.main-text {
+  line-height: 1.7em;
+  width: 70%;
+  font-size: 1.6em;
+}
+
+.main-button {
+  margin-top: 4em;
+  width: 7em;
+  aspect-ratio: 5/2;
+  background-color: rgba(196, 0, 0, 0.7);
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  border-radius: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Comfortaa";
+  &:hover {
+    background-color: rgb(196,0,0);
+    cursor: pointer;
+  }
+  button {
+    all: unset;
+  }
 }
