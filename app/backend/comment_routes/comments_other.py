@@ -44,8 +44,8 @@ def delete_post(tx, token: str, username: str, id: int) -> str:
 
 @bp_cother.route("/posts/delete/<int:id>", methods=["DELETE"])
 def delete_post_route(id):
-    username = request.args.get("username")
-    token = request.args.get("token")
+    username = request.args.get("username", "")
+    token = request.args.get("token", "")
     result = driver.session().execute_write(delete_post, token, username, id)
     print(f"Received a DELETE request on endpoint /posts/delete/{id}")
     return result, 200

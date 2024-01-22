@@ -31,8 +31,8 @@ def post_comment_submit(tx, token: str, username: str, content: str, under: int)
 
 @bp_cpost.route("/comments/submit", methods=["POST"])
 def post_comment_submit_route():
-    username = request.args.get("username")
-    token = request.args.get("token")
+    username = request.args.get("username", "")
+    token = request.args.get("token", "")
     req = request.json
     title = req["content"]
     under = req["under"]

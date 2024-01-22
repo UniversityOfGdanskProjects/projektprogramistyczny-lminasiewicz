@@ -11,6 +11,11 @@ def authenticate_token(tx, token: str, username: str) -> bool:
         return True
 
 
+def is_admin(tx, username: str) -> bool:
+    query = f"match (u:User) where u.username = \"{username}\" return u.admin"
+    return tx.run(query).data()[0]["u.admin"]
+
+
 def create_token(tx) -> str:
     unique = False
     while not unique:

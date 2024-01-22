@@ -47,6 +47,7 @@ def post_user_signup(tx, username, pwd, link, admin, registered) -> dict|None:
         _ = tx.run(query2).data()
         print(f"successfully created an account named \"{username}\"")
         return post_user_login(tx, username, pwd)
+    return {}
 
 
 
@@ -61,6 +62,4 @@ def post_user_signup_route():
     session_data = driver.session().execute_write(post_user_signup, username, pwd, link, admin, registered)
     print(session_data)
     print("Received a POST request on endpoint /api/users/signup")
-    if session_data:
-        return session_data, 200
-    return {}, 200
+    return session_data, 200

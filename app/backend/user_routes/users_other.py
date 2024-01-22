@@ -12,11 +12,9 @@ bp_uother = Blueprint("bp_uother", __name__)
 
 # PUT EDIT USER INFO
 
-
 def put_edit_user(tx, token: str, your_username: str, old_username: str, new_username: str, pwd: str) -> str:
     if authenticate_token(tx, token, your_username):
-        is_admin = f"match (a:User) where a.admin = true and a.username = \"{your_username}\" return a"
-        if len(tx.run(is_admin).data()) > 0 or your_username == old_username:
+        if is_admin(tx, your_username) or your_username == old_username:
             query = f"match (u:User) where u.username = \"{old_username}\" set u.username = \"{new_username}\" set u.password = \"{hash_password(pwd)}\""
             _ = tx.run(query)
             return "Operation Successful"
@@ -27,8 +25,8 @@ def put_edit_user(tx, token: str, your_username: str, old_username: str, new_use
 
 @bp_uother.route("/users/user/<old_username>/edit", methods=["PUT"])
 def put_edit_user_route(old_username):
-    your_username = request.args.get("username")
-    token = request.args.get("token")
+    your_username = request.args.get("username", "")
+    token = request.args.get("token", "")
     new_username = request.json["username"]
     pwd = request.json["password"]
     result = driver.session().execute_write(put_edit_user, token, your_username, old_username, new_username, pwd)
@@ -50,8 +48,8 @@ def delete_user_logout(tx, username, token) -> str:
 
 @bp_uother.route("/users/logout", methods=["DELETE"])
 def delete_user_logout_route():
-    username = request.args.get("username")
-    token = request.args.get("token")
+    username = request.args.get("username", "")
+    token = request.args.get("token", "")
     result = driver.session().execute_write(delete_user_logout, username, token)
     print("Received a POST request on endpoint /api/users/logout")
     return result, 200
