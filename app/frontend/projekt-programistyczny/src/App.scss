@@ -21,6 +21,7 @@ body {
   justify-content: space-between;
   padding: 0em 1.5em 0em 0em;
   border-bottom: 1px solid #505050;
+  z-index: 5;
 }
 
 #footer {
@@ -227,4 +228,107 @@ h1 {
   button {
     all: unset;
   }
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 15em;
+  margin-bottom: 15em;
+  width: 100vw;
+  .page-title {
+    color: lightgray;
+    text-align: center;
+    h1 {
+      font-size: 5em;
+    }
+  }
+}
+
+.form-wrapper {
+  display: flex;
+  width: 120em;
+
+  .form-select {
+    position: absolute;
+    width: 8em;
+    aspect-ratio: 5/2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid lightgray;
+    border-bottom: none;
+    color: lightgray;
+    font-size: 2em;
+    border-radius: 1em 1em 0 0;
+    background-color: #101010;
+    z-index: 1;
+
+    &.login-select {
+      margin-left: 2em;
+    }
+
+    &.signup-select {
+      margin-left: 11em;
+      z-index: -1;
+    }
+  }
+
+  .login-form {
+    margin-top: 6.4em;
+    background-color: #101010;
+    border: 4px solid lightgray;
+    border-radius: 3em;
+    width: 100%;
+    padding: 5em;
+    z-index: 0
+  }
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+
+  .login {
+    width: 75%;
+    font-size: 2em;
+    text-align: center;
+    color: lightgray;
+  
+    label {
+      display: block;
+      margin-top: 3em;
+    }
+  
+    input {
+      width: 50%;
+      height: 4em;
+      border-radius: 1em;
+
+  
+      &[type=submit] {
+        all: unset;
+        margin-top: 3em;
+        width: 6em;
+        aspect-ratio: 5/2;
+        border: 2px solid lightgray;
+        border-radius: 1em;
+
+        &:hover {
+          background-color: #303030;
+        }
+      }
+    }
+  }
+}
+
+.form-error {
+  margin: 1em 0 0 0;
+  display: block;
+  width: 100%;
+  text-align: center;
+  position: static;
+  color: red;
 }
