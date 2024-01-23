@@ -29,7 +29,7 @@ def post_comment_submit(tx, token: str, username: str, content: str, under: int)
     return "Error"
 
 
-@bp_cpost.route("/comments/submit", methods=["POST"])
+@bp_cpost.route("/api/comments/submit", methods=["POST"])
 def post_comment_submit_route():
     username = request.args.get("username", "")
     token = request.args.get("token", "")
@@ -37,5 +37,5 @@ def post_comment_submit_route():
     title = req["content"]
     under = req["under"]
     result = driver.session().execute_write(post_comment_submit, token, username, title, under)
-    print("Received a POST request on endpoint /post/submit")
+    print("Received a POST request on endpoint /api/comments/submit")
     return result, 200

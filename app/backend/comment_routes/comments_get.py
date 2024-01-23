@@ -78,7 +78,7 @@ def get_comments_by_username(tx, username: str) -> list[dict]:
         def rec_merge(comments, links, counter, acc=[]):
             if counter > 0:
                 return rec_merge(comments[:-1], links[:-1], counter-1, acc+[{
-                    "id": comments[counter-1]["id(c)"], "date": comments[counter-1]["c"]["date"],
+                    "id": comments[counter-1]["id(c)"], "date": str(comments[counter-1]["c"]["date"]),
                     "content": comments[counter-1]["c"]["content"], "deleted": comments[counter-1]["c"]["deleted"], "original_post": links[counter-1]["p.link"]}])
             else:
                 return acc

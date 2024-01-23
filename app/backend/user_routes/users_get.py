@@ -73,3 +73,26 @@ def get_user_by_username_route(username):
     posts = driver.session().execute_read(get_user_by_username, username)
     print(f"Received a GET request on endpoint /api/users/user/{username}")
     return {"users": posts}, 200
+
+
+
+# GET ACTIVITY OF USER
+
+def get_user_activity(tx, username) -> int:
+    exists_check = f"return exists {{match (u:User) where u.username = \"{username}\"}} as ex"
+    exists = tx.run(exists_check).data()[0]["ex"]
+    if exists:
+        query = f"match (u:User)-[:WROTE]-(c:Comment) where u.username = \"{username}\" return count(c) as comments"
+        comments = tx.run(query).data()[0]["comments"]
+        query2 = f"match (u:User)-[:WROTE]-(c:Comment) return round(avg(count(c)), 2) as average"
+        average = tx.run(query2).data()[0]["average"]
+        return round(comments - average, 2)
+
+
+@bp_uget.route("/api/users/<username>/activity", methods=["GET"])
+def get_user_activity_route(username):
+    score = driver.session().execute_read(get_user_activity, username)
+    print(f"Received a GET request on endpoint /api/users/{username}/activity")
+    if score:
+        return {"score": score}, 200
+    return {}, 400

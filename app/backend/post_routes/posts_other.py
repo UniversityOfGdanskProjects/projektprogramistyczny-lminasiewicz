@@ -24,7 +24,7 @@ def put_edit_post(tx, token: str, username: str, title: str, content: str, tags:
     return "Error"
 
 
-@bp_pother.route("/posts/edit/<int:id>", methods=["PUT"])
+@bp_pother.route("/api/posts/edit/<int:id>", methods=["PUT"])
 def put_edit_post_route(id):
     username = request.args.get("username", "")
     token = request.args.get("token", "")
@@ -33,7 +33,7 @@ def put_edit_post_route(id):
     content = req["content"]
     tags = req["tags"]
     result = driver.session().execute_write(put_edit_post, token, username, title, content, tags, id)
-    print(f"Received a POST request on endpoint /post/edit/{id}")
+    print(f"Received a POST request on endpoint /api/posts/edit/{id}")
     return result, 200
 
 
@@ -45,14 +45,17 @@ def delete_post(tx, token: str, username: str, id: int) -> str:
         if is_admin(tx, username):
             query = f"match (c:Comment)-[:RESPONDS_TO*]->(p:Post) where id(p) = {id} detach delete c, p"
             _ = tx.run(query)
-        return "Post Deleted Successfully"
-    return "Error"
+            query2 = f"match (p2:Post) where id(p2) = {id} detach delete p2"
+            _ = tx.run(query2)
+            return "Post Deleted Successfully"
+        return "Unauthorized"
+    return "Not Logged In"
 
 
-@bp_pother.route("/posts/delete/<int:id>", methods=["DELETE"])
+@bp_pother.route("/api/posts/delete/<int:id>", methods=["DELETE"])
 def delete_post_route(id):
     username = request.args.get("username", "")
     token = request.args.get("token", "")
     result = driver.session().execute_write(delete_post, token, username, id)
-    print(f"Received a DELETE request on endpoint /posts/delete/{id}")
+    print(f"Received a DELETE request on endpoint /api/posts/delete/{id}")
     return result, 200

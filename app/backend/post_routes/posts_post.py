@@ -17,8 +17,8 @@ def post_submit(tx, token: str, username: str, title: str, content: str, tags: s
     if authenticate_token(tx, token, username):
         if is_admin(tx, username):
             date = datetime.date.today()
-            query = f"match (n) return max(id(n))"
-            id = int(tx.run(query).data()[0]["id(n)"]) + 1
+            query = f"match (n) return max(id(n)) as m"
+            id = int(tx.run(query).data()[0]["m"]) + 1
             link = f"/posts/{id}"
             query2 = f"create (p:Post {{title: \"{title}\", content: \"{content}\", tags: \"{tags}\", date: Date(\"{date}\"), link: \"{link}\"}})"
             _ = tx.run(query2)
@@ -29,7 +29,7 @@ def post_submit(tx, token: str, username: str, title: str, content: str, tags: s
     return "Error"
 
 
-@bp_ppost.route("/posts/submit", methods=["POST"])
+@bp_ppost.route("/api/posts/submit", methods=["POST"])
 def post_submit_route():
     username = request.args.get("username", "")
     token = request.args.get("token", "")
@@ -38,5 +38,5 @@ def post_submit_route():
     content = req["content"]
     tags = req["tags"]
     result = driver.session().execute_write(post_submit, token, username, title, content, tags)
-    print("Received a POST request on endpoint /post/submit")
+    print("Received a POST request on endpoint /api/posts/submit")
     return result, 200

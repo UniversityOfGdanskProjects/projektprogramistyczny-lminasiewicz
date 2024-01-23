@@ -29,9 +29,13 @@ def post_user_login_route():
     req = request.json
     login = req["login"]
     pwd = req["password"]
-    session_data = driver.session().execute_write(post_user_login, login, pwd)
-    print("Received a POST request on endpoint /api/users/login")
-    return session_data, 200
+    if re.match("^.{4, 16}$", login):
+        if re.match ("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,20}$", pwd):
+            session_data = driver.session().execute_write(post_user_login, login, pwd)
+            print("Received a POST request on endpoint /api/users/login")
+            return session_data, 200
+        return "Password must be between 5 and 20 characters, contain a lowercase letter, an uppercase letter, and a digit.", 400
+    return "Login must be between 4 and 16 characters.", 400
 
 
 
@@ -41,7 +45,6 @@ def post_user_signup(tx, username, pwd, link, admin, registered) -> dict|None:
     hashed_pwd = hash_password(pwd)
     query = f"match (u:User) where u.username = \"{username}\" return u"
     results = tx.run(query).data()
-    print("results", results)
     if len(results) == 0:
         query2 = f"create (u:User {{username: \"{username}\", password: \"{hashed_pwd}\", link: \"{link}\", admin: {str(admin).lower()}, registered: Date(\"{registered}\")}})"
         _ = tx.run(query2).data()
@@ -59,7 +62,11 @@ def post_user_signup_route():
     link = f"/users/{username}"
     admin = False
     registered = str(date.today())
-    session_data = driver.session().execute_write(post_user_signup, username, pwd, link, admin, registered)
-    print(session_data)
-    print("Received a POST request on endpoint /api/users/signup")
-    return session_data, 200
+    if re.match ("^.{4,16}$", username):
+        if re.match ("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,20}$", pwd):
+            session_data = driver.session().execute_write(post_user_signup, username, pwd, link, admin, registered)
+            print(session_data)
+            print("Received a POST request on endpoint /api/users/signup")
+            return session_data, 200
+        return "Password must be between 5 and 20 characters, contain a lowercase letter, an uppercase letter, and a digit.", 400
+    return "Username must be between 4 and 16 characters.", 400
