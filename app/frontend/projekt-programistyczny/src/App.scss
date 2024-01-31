@@ -89,6 +89,12 @@ body {
   align-self: flex-end;
 }
 
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   height: 4em;
   aspect-ratio: 1/1;
@@ -569,5 +575,122 @@ h1 {
 
   .user-data {
     text-shadow: 2px 2px black;
+  }
+}
+
+.post-searchbar{
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .post-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.tag-selector {
+  margin-top: 2em;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+
+  .tag {
+    text-align: center;
+    width: 7em;
+    font-size: 1.5em;
+    color: white;
+    height: 1em;
+    background: linear-gradient(#306060, #306060, #205050);
+    padding: 0.7em;
+    border-radius: 2em;
+
+    &:hover {
+      background: linear-gradient(#508080, #508080, #407070);
+    }
+  }
+}
+
+.posts {
+  margin: 2em;
+  width: 100%;
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #a0a0a0;
+
+    .post-result {
+      width: 100%;
+      height: 10em;
+      display: grid;
+      grid-template-columns: 50% 50%;
+
+
+      .post-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 2em;
+        border: 2px solid #a0a0a0;
+        border-radius: 1em;
+        width: 100%;
+        padding: 0.2em 0 0.2em 1.5em;
+      
+        .item-title {
+          color: lightgray; 
+          margin-bottom: 0.5em;
+        }
+      
+        .small {
+          color: #a0a0a0;
+          font-size: 0.9em;
+          margin-bottom: 1em;
+          margin-top: 0.5em;
+        }
+    
+        .item-content {
+          color: lightgray;
+          letter-spacing: 1px;
+        }
+      
+        &:hover {
+          border: 2px solid lightgray;
+          background-color: #202020;
+        }
+      }
+    }    
+  }
+}
+
+.admin-options {
+  height: 10em;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1em;
+  padding-bottom: 0;
+
+  .btn-admin {
+    width: 6em;
+    height: 3.5em;
+    background-color: #101010;
+    color: white;
+    margin-bottom: 2em;
+    border-radius: 2em;
+  }
+
+  .btn-del {
+    font-size: 1.5em;
+    background-color: #aa0000;
+  }
+
+  .btn-edit {
+    font-size: 1.5em;
+    background-color: #aaaa44;
   }
 }

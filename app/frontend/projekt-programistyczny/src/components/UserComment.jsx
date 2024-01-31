@@ -9,7 +9,7 @@ export default function UserComment({content, date, post}) {
             return `${content.slice(0, 47)}...`
         }
         return content
-    })
+    }, [])
 
 
     return (
