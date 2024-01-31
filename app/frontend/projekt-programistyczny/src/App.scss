@@ -505,3 +505,69 @@ h1 {
   }
 }
 
+
+.user-comments {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+
+  .user-comments-list {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    list-style: none;
+    padding: 2em;
+
+    .comment-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 2em;
+      border: 2px solid #a0a0a0;
+      border-radius: 1em;
+      width: 50%;
+      padding: 0.2em 0 0.2em 1.5em;
+
+      .item-title {
+        color: lightgray; 
+        margin-bottom: 0;
+      }
+
+      .small {
+        color: #a0a0a0;
+        font-size: 0.9em;
+        margin-bottom: 1em;
+      }
+
+      &:hover {
+        border: 2px solid lightgray;
+        background-color: #202020;
+      }
+    }
+  }
+}
+
+
+.user-stats {
+  margin-top: 1em;
+  border: 2px solid gray;
+  border-radius: 1em;
+  color: lightgray;
+  padding: 2em;
+  width: 40em;
+  font-size: 1.5em;
+  background: linear-gradient(#101010, #101010, #10151a, #101a25);
+
+  .user-name {
+    font-size: 1.4em;
+    text-shadow: 2px 2px 10px gray;
+  }
+
+  .user-data {
+    text-shadow: 2px 2px black;
+  }
+}
