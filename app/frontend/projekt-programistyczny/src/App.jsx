@@ -6,6 +6,8 @@ import Footer from "./components/Footer";
 import Main from "./pages/Main";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
+import Users from "./pages/Users";
+import User from "./pages/User";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/" element={<Main />}></Route>
         <Route path="login" element={<LogIn />} />
         <Route path="signup" element={<SignUp />} />
+        <Route path="users" element={<Users />} />
+        <Route path="users/:username" element={<User/>} />
       </Routes>
       <Footer/>
     </>
@@ -26,8 +30,6 @@ export default App;
 {/* 
           <Route path="posts" element={<Posts />} />
           <Route path="posts/:id" element={<Post id={id}/>} />
-          <Route path="users" element={<Users />} />
-          <Route path="users/:username" element={<User username={username}/>} />
           <Route path="" element={<Users />} />
           <Route path="*" element={<NoPage />} />
         </Route> */}

@@ -62,7 +62,7 @@ export default function LoginForm() {
     else {
         return (
             <div className="login-wrapper">
-                <form className="login" onSubmit={formik.handleSubmit}>
+                <form className="form" onSubmit={formik.handleSubmit}>
                     <label htmlFor="login">Login</label>
                     <br />
                     <input type="text" id="login" {...formik.getFieldProps('login')} />

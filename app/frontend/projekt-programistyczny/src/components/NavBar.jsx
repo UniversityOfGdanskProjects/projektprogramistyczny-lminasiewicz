@@ -1,6 +1,5 @@
 import ReactDOM from "react-dom/client";
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
 import LogInOut from "./LogInOut";
 
 export default function NavBar() {
@@ -13,12 +12,11 @@ export default function NavBar() {
             </div>
             
             <div className="flex-horizontal-right flex-generic">
-                <div className="navbar-link navbar-hover b-left" href=""><div className="flex-generic">Posts</div></div>
-                <div className="navbar-link navbar-hover b-left" href=""><div className="flex-generic">Users</div></div>
-                <div className="navbar-link navbar-hover b-left" href=""><div className="flex-generic">About</div></div>
+                <div className="navbar-link navbar-hover b-left" onClick={() => navigate("/posts")}><div className="flex-generic">Posts</div></div>
+                <div className="navbar-link navbar-hover b-left" onClick={() => navigate("/users")}><div className="flex-generic">Users</div></div>
+                <div className="navbar-link navbar-hover b-left" onClick={() => navigate("/about")}><div className="flex-generic">About</div></div>
                 <LogInOut/>
             </div>
         </div>
     )
 }
-//<AdminPanelLink/>

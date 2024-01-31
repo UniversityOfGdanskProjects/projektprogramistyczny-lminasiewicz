@@ -8,8 +8,8 @@ export default function LogIn() {
     const navigate = useNavigate();
     if (localStorage.getItem("auth")) {
         return (
-            <div className="page">
-                <div className="page-title">Log out before accessing.</div>
+            <div className="page login-page">
+                <div className="page-title" style={{"margin-bottom": "20em"}}><h1>Log out before accessing.</h1></div>
             </div>
         );
     }
