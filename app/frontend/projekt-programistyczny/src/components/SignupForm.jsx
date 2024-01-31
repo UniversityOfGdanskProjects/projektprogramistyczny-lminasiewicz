@@ -12,25 +12,25 @@ export default function LoginForm() {
     const onSubmit = (vals) => {
         const login = vals.login;
         const pwd = vals.pwd;
-        axios.post(`${DB_LINK}/api/users/login`, {login: login, password: pwd}).then((res) =>{
+        axios.post(`${DB_LINK}/api/users/signup`, {username: login, password: pwd}).then((res) =>{
             console.log(res);
             if (typeof res.data === "object") {
-                if (Object.keys(res.data).length > 0) {
+                if (Object.keys(res.data).length !== 0) {
+                    setErr("Signup Failed. Username already in use.")
+                }
+                else {
                     setErr("");
                     console.log(`Logged In User: ${res.data.username}`);
                     localStorage.removeItem("auth")
                     localStorage.setItem("auth", JSON.stringify(res.data));
                     navigate("/");
                 }
-                else {
-                    setErr("Login Failed. Incorrect username or password.");
-                }
             }
             else {
-                setErr("Login Failed. Incorrect username or password.");
+                setErr("Signup Failed. Invalid username or password.");
             }
         }).catch((err) => {
-            setErr("Login Failed. Server error.");
+            setErr("Signup Failed. Server error.");
         })
     };
 

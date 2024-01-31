@@ -36,7 +36,7 @@ def put_edit_comment_route(id):
 
 def delete_comment(tx, token: str, username: str, id: int) -> str:
     if authenticate_token(tx, token, username):
-        query = f"match (a:User) where a.admin = true match (u:User)-[:WROTE]->(c:Comment) where id(c) = {id} and (u.username = \"{username}\" or a.username = \"{username}\") set c.deleted = true"
+        query = f"match (a:User) where a.admin = true match (u:User)-[:WROTE]->(c:Comment) where id(c) = {id} and (u.username = \"{username}\" or  a.username = \"{username}\") set c.deleted = true"
         _ = tx.run(query)
         return "Success"
     return "Error"

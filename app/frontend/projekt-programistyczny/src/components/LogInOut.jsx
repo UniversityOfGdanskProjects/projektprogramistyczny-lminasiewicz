@@ -5,14 +5,14 @@ import ProfileButton from "./ProfileButton";
 
 export default function LogInOut() {
     const navigate = useNavigate();
-    if (!localStorage.getItem("loggedIn")) {
+    if (!localStorage.getItem("auth")) {
         return (
             <div className="navbar-link navbar-hover b-left b-right"><div className="flex-generic" onClick={() => navigate("/login")}>Log In</div></div>
         )
     }
     else {
         return (
-            <ProfileButton user={localStorage.getItem("loggedIn").username}/>
-        )
+            <ProfileButton user={JSON.parse(localStorage.getItem("auth")).username}/>
+        );
     }
 }

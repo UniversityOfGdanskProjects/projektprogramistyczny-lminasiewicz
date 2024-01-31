@@ -1,9 +1,11 @@
 import re
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from db_connection import driver
 from helper_functions import *
 
 app = Flask(__name__)
+CORS(app)
 
 from post_routes.posts_get import bp_pget
 from post_routes.posts_post import bp_ppost

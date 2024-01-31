@@ -142,7 +142,7 @@ DELETE http://127.0.0.1:5000/api/posts/delete/15?username=Admin&token=12321
 
 ### GET SOMEONE'S COMMENTS WITH LINKS TO ORIGINAL POSTS
 
-GET http://127.0.0.1:5000/api/User1/comments
+GET http://127.0.0.1:5000/api/User2/comments
 Accept: application/json
 
 ### GET FILTERED POSTS

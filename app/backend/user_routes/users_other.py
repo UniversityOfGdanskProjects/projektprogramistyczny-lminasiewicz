@@ -46,7 +46,7 @@ def delete_user_logout(tx, username, token) -> str:
     
 
 
-@bp_uother.route("/users/logout", methods=["DELETE"])
+@bp_uother.route("/api/users/logout", methods=["DELETE"])
 def delete_user_logout_route():
     username = request.args.get("username", "")
     token = request.args.get("token", "")

@@ -1,10 +1,10 @@
 import ReactDOM from "react-dom/client";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import LoginForm from "../components/LoginForm";
+import SignupForm from "../components/SignupForm.jsx";
 
 
-export default function LogIn() {
+export default function SignUp() {
     const navigate = useNavigate();
     if (localStorage.getItem("auth")) {
         return (
@@ -15,9 +15,9 @@ export default function LogIn() {
     }
     else {
         return (
-            <div className="page login-page">
+            <div className="page signup-page">
                 <div className="page-title">
-                    <h1>Log In</h1>
+                    <h1>Sign Up</h1>
                 </div>
                 <div className="form-wrapper">
                     <div className="form-select login-select" onClick={() => navigate("/login")}>
@@ -27,7 +27,7 @@ export default function LogIn() {
                         <p>Sign Up</p>
                     </div>
                     <div className="form acc-form">
-                        <LoginForm/>
+                        <SignupForm/>
                     </div>
                 </div>
             </div>

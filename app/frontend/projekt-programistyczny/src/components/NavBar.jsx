@@ -4,7 +4,7 @@ import { useState } from 'react';
 import LogInOut from "./LogInOut";
 
 export default function NavBar() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     return (
         <div id="navbar">
             <div className="flex-horizontal-left flex-generic" onClick={() => navigate('/')}>

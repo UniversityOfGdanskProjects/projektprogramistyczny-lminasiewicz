@@ -21,6 +21,7 @@ def post_user_login(tx, login, pwd) -> dict|None:
         query2 = f"match (u:User) where u.username = \"{login}\" create (a:Authentication {{token: \"{token}\"}})-[:LOGS_IN]->(u)"
         _ = tx.run(query2)
         return {"username": login, "token": token}
+    return "Incorrect Password"
     
 
 
@@ -29,7 +30,7 @@ def post_user_login_route():
     req = request.json
     login = req["login"]
     pwd = req["password"]
-    if re.match("^.{4, 16}$", login):
+    if re.match("^.{4,16}$", login):
         if re.match ("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,20}$", pwd):
             session_data = driver.session().execute_write(post_user_login, login, pwd)
             print("Received a POST request on endpoint /api/users/login")
