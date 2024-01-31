@@ -6,8 +6,8 @@ import DeleteButton from "./DeleteButton";
 export default function PostItem({title, content, date, id}) {
     const navigate = useNavigate();
     const truncatedContent = useMemo(() => {
-        if (content.length > 60) {
-            return `${content.slice(0, 57)}...`
+        if (content.length > 80) {
+            return `${content.slice(0, 77)}...`
         }
         return content
     }, []);
@@ -22,7 +22,7 @@ export default function PostItem({title, content, date, id}) {
 
     return (
         <li className="post-result">
-            <div className="post-item" onClick={() => navigate(`/posts/${id}}`)}>
+            <div className="post-item" onClick={() => navigate(`/posts/${id}`)}>
                 <h2 className="item-title">{truncatedTitle}</h2>
                 <div className="item-content">{truncatedContent}</div>
                 <div className="small">Posted: {date}</div>

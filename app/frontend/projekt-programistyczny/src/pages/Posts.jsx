@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 
 
 export default function Posts() {
+    const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
     const initialTags = {university: false, programming: false, personal: false, hobbies: false}
     const uniRef = useRef()
@@ -106,7 +107,13 @@ export default function Posts() {
                         <input type="text" id="phrase" {...formik.getFieldProps('before')} />
                         <label htmlFor="after">After</label>
                         <input type="text" id="phrase" {...formik.getFieldProps('after')} />
-                        <input type="submit" value="Search" />
+                        <div className="flex-generic width50">
+                            <input type="submit" value="Search" />
+                        {JSON.parse(localStorage.getItem("auth")).admin &&
+                            <div className="write-post" onClick={() => navigate("/posts/edit/-1")}><p>Write Post</p></div>
+                        }
+                        </div>
+                        
                     </form>
                     <div className="tag-selector">
                         <div className="tag" ref={uniRef} onClick={() => dispatch({type: "UNIVERSITY"})}>University</div>

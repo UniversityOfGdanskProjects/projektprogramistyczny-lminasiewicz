@@ -9,6 +9,8 @@ import SignUp from "./pages/SignUp";
 import Users from "./pages/Users";
 import User from "./pages/User";
 import Posts from "./pages/Posts";
+import EditPost from "./pages/EditPost";
+import Post from "./pages/Post";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="users" element={<Users />} />
         <Route path="users/:username" element={<User/>} />
         <Route path="posts" element={<Posts />} />
+        <Route path="posts/:id" element={<Post />} />
+        <Route path="posts/edit/:id" element={<EditPost />} />
       </Routes>
       <Footer/>
     </>
@@ -30,7 +34,6 @@ function App() {
 export default App;
 
 {/* 
-          <Route path="posts/:id" element={<Post id={id}/>} />
           <Route path="" element={<Users />} />
           <Route path="*" element={<NoPage />} />
         </Route> */}
