@@ -1,0 +1,2 @@
+:ID|title:STRING|content:STRING|link:STRING|date:DATE|tags:STRING[]
+1|Imported Post|Hi, this is an imported post!|placeholder.link|2023-01-01|personal,university

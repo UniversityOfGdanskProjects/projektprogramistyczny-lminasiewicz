@@ -1,0 +1,155 @@
+###
+
+POST http://127.0.0.1:5000/api/users/login
+Content-Type: application/json
+
+{
+    "login": "User4",
+    "password": "Password4"
+}
+
+###
+
+DELETE http://127.0.0.1:5000/api/users/logout?username=User4&token=e8c9d7fc-9460-4fd4-9e5d-b1441e735dea
+
+###
+
+POST http://127.0.0.1:5000/comments/submit?username=User4&token=aca07814-5a2c-4d75-b834-67691ddc9b16
+Content-Type: application/json
+
+{
+    "content": "POGGERS2!!!!!!!",
+    "under": 0
+}
+
+###
+
+POST http://127.0.0.1:5000/posts/submit?username=Admin&token=12321
+Content-Type: application/json
+
+{
+    "title": "gaming!",
+    "content": "HOOOOOOAAAAAAAAAAAAAAAA HOOooOOH Hooooaaaaaa hoooaaa hooa hooh hoooooooooooooooooooooooaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "tags": ["personal"]
+}
+
+###
+
+GET  http://127.0.0.1:5000/api/users/search?phrase=ser
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:5000/posts/edit/14?username=Admin&token=12321
+Content-Type: application/json
+
+{
+    "title": "gaming.",
+    "content": "HOOooOOH Hooooaaaaaa hoooaaa hooa hooh hoooooooooooooooooooooooaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "tags": ["personal"]
+}
+
+###
+
+DELETE http://127.0.0.1:5000/posts/delete/0?username=Admin&token=12321
+
+###
+
+POST http://127.0.0.1:5000/api/backup/posts?username=Admin&token=12321
+
+### 
+
+POST http://127.0.0.1:5000/api/backup/load/posts?username=Admin&token=12321
+
+### 
+
+####### TUTAJ TESTY DLA ODDAWANIA PROJEKTU PO KOLEI #######
+
+### SIGN UP - FAIL
+
+POST http://127.0.0.1:5000/api/users/signup
+Content-Type: application/json
+
+{
+    "username": "User4",
+    "password": "Password4"
+}
+
+### SIGN UP - SUCCESS
+
+POST http://127.0.0.1:5000/api/users/signup
+Content-Type: application/json
+
+{
+    "username": "User5",
+    "password": "Password5"
+}
+
+### REGISTERED USED POSTS COMMENT
+
+POST http://127.0.0.1:5000/api/comments/submit?username=User4&token=aca07814-5a2c-4d75-b834-67691ddc9b16
+Content-Type: application/json
+
+{
+    "content": "Kocham Neo4j",
+    "under": 0
+}
+
+### REGISTERED USER DELETES COMMENT - FAIL
+
+DELETE http://127.0.0.1:5000/api/comments/delete/4?username=User4&token=aca07814-5a2c-4d75-b834-67691ddc9b16
+
+### REGISTERED USER DELETES COMMENT - SUCCESS
+
+# CHECK WHICH POST IS BY USER4
+DELETE http://127.0.0.1:5000/api/comments/delete/15?username=User4&token=aca07814-5a2c-4d75-b834-67691ddc9b16
+
+### REGISTERED USER EDITS A COMMENT
+
+PUT http://127.0.0.1:5000/api/comments/edit/15?username=User4&token=aca07814-5a2c-4d75-b834-67691ddc9b16
+Content-Type: application/json
+
+{
+    "content": "A tutaj mamy zmienioną treść komentarza"
+}
+
+### ADMIN WRITES A POST
+
+POST http://127.0.0.1:5000/api/posts/submit?username=Admin&token=12321
+Content-Type: application/json
+
+{
+    "title": "Tytuł",
+    "content": "Treść",
+    "tags": ["university"]
+}
+
+### ADMIN EDITS A POST
+
+# GET ID OF THE CREATED POST
+PUT http://127.0.0.1:5000/api/posts/edit/15?username=Admin&token=12321
+Content-Type: application/json
+
+{
+    "title": "Nowy tytuł",
+    "content": "Zmieniona treść",
+    "tags": ["personal"]
+}
+
+### ADMIN DELETES A POST
+
+DELETE http://127.0.0.1:5000/api/posts/delete/15?username=Admin&token=12321
+
+### GET SOMEONE'S COMMENTS WITH LINKS TO ORIGINAL POSTS
+
+GET http://127.0.0.1:5000/api/User2/comments
+Accept: application/json
+
+### GET FILTERED POSTS
+
+GET http://127.0.0.1:5000/api/posts/filters?tags=university&before=2023-01-20
+Accept: application/json
+
+### 
+
+POST http://127.0.0.1:5000/api/messages/message/

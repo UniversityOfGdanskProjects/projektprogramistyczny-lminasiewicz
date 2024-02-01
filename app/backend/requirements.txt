@@ -1,0 +1,6 @@
+python-dotenv
+flask
+neo4j
+os
+bcrypt
+datetime
