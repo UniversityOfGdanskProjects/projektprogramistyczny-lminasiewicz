@@ -600,18 +600,25 @@ h1 {
   display: flex;
   justify-content: space-between;
 
+  $tag-colors: (linear-gradient(#2030a0, #2030a0, #182888), linear-gradient(#702080, #702080, #581068), linear-gradient(#306060, #306060, #205050), linear-gradient(#b07000, #b07000, #a05800));
+  @for $i from 1 through length($tag-colors) {
+    $color: nth($tag-colors, $i);
+    :nth-child(#{$i}) {
+      background: $color;
+    }
+  }
+
   .tag {
     text-align: center;
     width: 7em;
     font-size: 1.5em;
     color: white;
     height: 1em;
-    background: linear-gradient(#306060, #306060, #205050);
     padding: 0.7em;
     border-radius: 2em;
 
     &:hover {
-      background: linear-gradient(#508080, #508080, #407070);
+      filter: brightness(1.2);
     }
   }
 }
@@ -856,5 +863,24 @@ textarea {
     color: lightgray;
     border: 1px solid #303030;
     border-radius: 1em;
+    display: grid;
+    grid-template-columns: 90% 10%;
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .btn-admin {
+        margin-right: 1em;
+        padding: 1em;
+        background-color: #800000;
+        border-radius: 1em;
+
+        &:hover {
+          filter: brightness(1.2);
+        }
+      }
+    }
   }
 }

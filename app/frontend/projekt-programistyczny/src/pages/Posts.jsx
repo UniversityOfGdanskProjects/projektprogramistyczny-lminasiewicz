@@ -20,35 +20,35 @@ export default function Posts() {
         switch (action.type) {
             case "UNIVERSITY":
                 if (!state.university) {
-                    uniRef.current.style.background = "#609090";
+                    uniRef.current.style.filter = "brightness(1.3)";
                 }
                 else {
-                    uniRef.current.style.background = "linear-gradient(#306060, #306060, #205050)";
+                    uniRef.current.style.filter = "brightness(1)";
                 }
                 
                 return {university: !state.university, programming: state.programming, personal: state.personal, hobbies: state.hobbies};
             case "PROGRAMMING":
                 if (!state.programming) {
-                    proRef.current.style.background = "#609090";
+                    proRef.current.style.filter = "brightness(1.3)";
                 }
                 else {
-                    proRef.current.style.background = "linear-gradient(#306060, #306060, #205050)";
+                    proRef.current.style.filter = "brightness(1)";
                 }
                 return {university: state.university, programming: !state.programming, personal: state.personal, hobbies: state.hobbies};
             case "PERSONAL":
                 if (!state.personal) {
-                    perRef.current.style.background = "#609090";
+                    perRef.current.style.filter = "brightness(1.3)";
                 }
                 else {
-                    perRef.current.style.background = "linear-gradient(#306060, #306060, #205050)";
+                    perRef.current.style.filter = "brightness(1)";
                 }
                 return {university: state.university, programming: state.programming, personal: !state.personal, hobbies: state.hobbies};
             case "HOBBIES":
                 if (!state.hobbies) {
-                    hobRef.current.style.background = "#609090";
+                    hobRef.current.style.filter = "brightness(1.3)";
                 }
                 else {
-                    hobRef.current.style.background = "linear-gradient(#306060, #306060, #205050)";
+                    hobRef.current.style.filter = "brightness(1)";
                 }
                 return {university: state.university, programming: state.programming, personal: state.personal, hobbies: !state.hobbies};
             default:

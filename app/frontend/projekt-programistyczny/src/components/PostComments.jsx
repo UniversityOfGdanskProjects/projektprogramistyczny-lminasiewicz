@@ -49,7 +49,7 @@ export default function PostComments({ id }) {
             <div className="comments">
                 <ul className="post-comments-list">
                     {comments.map((comment) => {
-                        return !comment.deleted && <Comment id={comment.id} author={comment.author} date={comment.date} content={comment.content}/>
+                        return !comment.deleted && <Comment id={comment.id} author={comment.author} date={comment.date} content={comment.content} deleted={comment.deleted}/>
                     })}
                 </ul>
             </div>
