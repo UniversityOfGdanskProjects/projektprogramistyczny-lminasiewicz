@@ -33,19 +33,21 @@ def get_posts_route():
 # GET ALL POSTS (FILTERED WITH TAGS AND DATE)
 
 def get_filtered_posts(tx, tags: list[str], before: str|None = None, after: str = "1970-01-01") -> dict:
-    query = f"match (p:Post) where any(tag in p.tags where tag in {tags}) and p.date > Date(\"{after}\") and p.date > Date(\"{before}\") return p"
+    query = f"match (p:Post) where any(tag in p.tags where tag in {tags}) and p.date > Date(\"{after}\") and p.date < Date(\"{before}\") return p, id(p)"
     if not before:
-        query = f"match (p:Post) where any(tag in p.tags where tag in {tags}) and p.date > Date(\"{after}\") return p"
+        query = f"match (p:Post) where any(tag in p.tags where tag in {tags}) and p.date > Date(\"{after}\") return p, id(p)"
     results = tx.run(query).data()
-    return [{"title": result["p"]["title"], "content": result["p"]["content"], "link": result["p"]["link"], "date": str(result["p"]["date"]), "tags": result["p"]["tags"]} for result in results]
+    return [{"id": result["id(p)"], "title": result["p"]["title"], "content": result["p"]["content"], "link": result["p"]["link"], "date": str(result["p"]["date"]), "tags": result["p"]["tags"]} for result in results]
 
 
 @bp_pget.route("/api/posts/filters", methods=["GET"])
 def get_filtered_posts_route():
-    tags = request.args.get("tags").split(",")
+    tags = request.args.get("tags")
+    if tags: 
+        tags = tags.split(",")
+    else: tags = ["university", "programming", "personal", "hobbies"]
     after = request.args.get("after", "1970-01-01")
     before = request.args.get("before", None)
-    print("after:", after)
     if re.match("[0-9]{4}-[0-9]{2}-[0-9]{2}", after) and (not before or re.match("[0-9]{4}-[0-9]{2}-[0-9]{2}", before)):
         posts = driver.session().execute_read(get_filtered_posts, tags, before, after)
         print(f"Received a GET request on endpoint /api/posts/filters with parameters: tags={','.join(tags)} after={after} before={before}")

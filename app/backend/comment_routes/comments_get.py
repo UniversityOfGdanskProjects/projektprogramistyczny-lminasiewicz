@@ -51,6 +51,7 @@ def get_comments_by_comment_id(tx, id: int) -> list[dict]:
     results = tx.run(query).data()
     if results:
         return [{"author": result["u.username"], "id": result["id(c)"], "date": str(result["c"]["date"]), "content": result["c"]["content"], "deleted": result["c"]["deleted"]} for result in results]
+    return []
 
 
 @bp_cget.route("/api/comments/byComment/<int:id>", methods=["GET"])
@@ -70,7 +71,7 @@ def get_comments_by_username(tx, username: str) -> list[dict]:
         return None
     else:
         def get_link(id):
-            query = f"match (c:Comment)-[:RESPONDS_TO*]->(p:Post) where id(c)={id} and c.deleted = false return p.link"
+            query = f"match (c:Comment)-[:RESPONDS_TO*]->(p:Post) where id(c)={id} and c.deleted = false return id(p)"
             results = tx.run(query).data()
             return results[0]
 
@@ -79,12 +80,11 @@ def get_comments_by_username(tx, username: str) -> list[dict]:
             if counter > 0:
                 return rec_merge(comments[:-1], links[:-1], counter-1, acc+[{
                     "id": comments[counter-1]["id(c)"], "date": str(comments[counter-1]["c"]["date"]),
-                    "content": comments[counter-1]["c"]["content"], "deleted": comments[counter-1]["c"]["deleted"], "original_post": links[counter-1]["p.link"]}])
+                    "content": comments[counter-1]["c"]["content"], "deleted": comments[counter-1]["c"]["deleted"], "original_post": links[counter-1]["id(p)"]}])
             else:
                 return acc
         
         data = rec_merge(results, links, len(results))
-        print(data)
         return data
 
 

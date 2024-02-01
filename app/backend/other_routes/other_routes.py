@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import date
 from flask import Blueprint, request, jsonify
 
 sys.path.append("..")
@@ -19,14 +19,14 @@ def post_send_message(tx, token: str, username: str, recipient: str, content: st
             exists_query = f"match (u:User) where u.username = \"{recipient}\""
             exists = tx.run(exists_query).data()
             if is_admin(tx, username) and exists:
-                time = str(datetime.now())
-                query = f"match (u1:User) where u1.username = \"{username}\" match (u2:User) where u2.username = \"{recipient}\" create (m:Message {{content: \"{content}\", posted: datetime(\"{time}\")}}) create (u1)-[:WROTE]->(m)-[:TO]->(u2)"
+                time = str(date.today())
+                query = f"match (u1:User) where u1.username = \"{username}\" match (u2:User) where u2.username = \"{recipient}\" create (m:Message {{content: \"{content}\", posted: date(\"{time}\")}}) create (u1)-[:WROTE]->(m)-[:TO]->(u2)"
                 _ = tx.run(query)
                 return "Message Successfully Sent"
             return "Only Admins can post to any existing user!"
         else:
-            time = str(datetime.now())
-            query = f"match (u1:User) where u1.username = \"{username}\" match (u2:User) where u2.admin = true create (m:Message {{content: \"{content}\", posted: datetime(\"{time}\")}}) create (u1)-[:WROTE]->(m)-[:TO]->(u2)"
+            time = str(date.today())
+            query = f"match (u1:User) where u1.username = \"{username}\" match (u2:User) where u2.admin = true create (m:Message {{content: \"{content}\", posted: date(\"{time}\")}}) create (u1)-[:WROTE]->(m)-[:TO]->(u2)"
             return "Message Successfully Sent"
     return "Authentication Failure"
 
@@ -43,24 +43,22 @@ def post_send_message_route():
 
 
 
-# GET RECEIVED MESSAGES
+# GET RECEIVED AND SENT MESSAGES
 
 def get_received_messages(tx, token: str, username: str, target: str) -> str|list[dict]:
     if authenticate_token(tx, token, username):
-        if is_admin(tx, username) or username == target:
-            query = f"match (m:Message)-[:TO]->(u:User) where u.username = \"{target}\" return m"
-            results = tx.run(query).data()
-            return [{"content": result["m"]["content"], "time": result["m"]["time"]} for result in results]
-        return "Unauthorized"
+        query = f"match (m:Message)-[:TO]->(u:User) match (u:User)-[:WROTE]->(m2:Message) where u.username = \"{username}\" with [m, m2] as messages unwind messages as h return h order by h.time, id(h)"
+        results = tx.run(query).data()
+        return [{"content": result["m"]["content"], "time": result["m"]["time"]} for result in results]
     return "Not Logged In"
     
 
 
-@bp_other.route("/api/messages/get/<target>", methods=["GET"])
+@bp_other.route("/api/users/messages", methods=["GET"])
 def get_received_messages_route(target):
     username = request.args.get("username", "")
     token = request.args.get("token", "")
-    results = driver.session().execute_write(get_received_messages, token, username, target)
+    results = driver.session().execute_write(get_received_messages, token, username)
     print(f"Received a GET request on endpoint /api/messages/get/{target}")
     return {"messages": results}, 200
 
@@ -72,25 +70,27 @@ def post_add_rating(tx, token: str, username: str, id: int, rating: int|float) -
     rating = rating // 1
     if rating < 1: rating = 1
     if rating > 5: rating = 5
-    if authenticate_token(token, username):
-        exists_query = f"match (u:User) where u.username = \"{username}\" match (p:Post) where id(p) = {id} return exists {{ match (u)-[:CREATED]->(:Rating)-[:RATES]->(p) }}"
-        exists = tx.run(exists_query).data()
+    if authenticate_token(tx, token, username):
+        exists_query = f"match (u:User) where u.username = \"{username}\" match (p:Post) where id(p) = {id} return exists {{ match (u)-[:CREATED]->(:Rating)-[:RATES]->(p) }} as ex"
+        exists = tx.run(exists_query).data()[0]["ex"]
+        print(exists)
         if not exists:
-            today = str(datetime.today())
-            query = f"match (u:User) where u.username = \"{username}\" match (p:User) where id(p) = {id} create (r:Rating {{score: \"{rating}\", posted: date(\"{today}\")}}) create (u)-[:CREATED]->(r)-[:RATES]->(p)"
+            today = str(date.today())
+            query = f"match (u:User) where u.username = \"{username}\" match (p:Post) where id(p) = {id} create (r:Rating {{score: \"{rating}\", posted: date(\"{today}\")}}) with u,r,p create (u)-[:CREATED]->(r)-[:RATES]->(p)"
             _ = tx.run(query)
-            return "Message Successfully Sent"
+            return "Rating added successfully."
         return "Rating already exists."
     return "Not Logged In"
 
 
-@bp_other.route("/api/posts/<int:id>/review", methods=["POST"])
+@bp_other.route("/api/posts/<int:id>/rating", methods=["POST"])
 def post_add_rating_route(id):
     username = request.args.get("username", "")
     token = request.args.get("token", "")
     rating = request.json["rating"]
     status = driver.session().execute_write(post_add_rating, token, username, id, rating)
-    print("Received a POST request on endpoint /api/messages/review")
+    print(status)
+    print("Received a POST request on endpoint /api/posts/<id>/rating")
     return status, 200
 
 
@@ -98,17 +98,40 @@ def post_add_rating_route(id):
 # GET POST RATING
 
 def get_post_rating(tx, id: int) -> int|None:
-    query = f"match (r:Rating)-[:RATES]->(p:Post) where id(p) = {id} return avg(r) as average"
+    query = f"match (r:Rating)-[:RATES]->(p:Post) where id(p) = {id} return avg(toInteger(r.score)) as average"
     results = tx.run(query).data()[0]["average"]
     if results:
         return results
+    return 0
 
 
 @bp_other.route("/api/posts/<int:id>/rating", methods=["GET"])
 def get_post_rating_route(id):
     results = driver.session().execute_write(get_post_rating, id)
     print(f"Received a GET request on endpoint /api/posts/{id}/rating")
-    return {"messages": results}, 200
+    return {"score": results}, 200
+
+
+
+# GET YOUR RATING OF POST
+
+def get_your_post_rating(tx, username: str, token: str, id: int) -> int:
+    if authenticate_token(tx, token, username):
+        query = f"match (u:User)-[:CREATED]->(r:Rating)-[:RATES]->(p:Post) where id(p) = {id} and u.username = \"{username}\" return r"
+        results = tx.run(query).data()
+        if results:
+            return results[0]["r"]["score"]
+        return 0
+    return -1
+
+
+@bp_other.route("/api/posts/<int:id>/userrating", methods=["GET"])
+def get_your_post_rating_route(id):
+    username = request.args.get("username")
+    token = request.args.get("token")
+    results = driver.session().execute_write(get_your_post_rating, username, token, id)
+    print(f"Received a GET request on endpoint /api/posts/{id}/userrating")
+    return {"rating": results}, 200
 
 
 

@@ -80,6 +80,5 @@ def get_verification_route():
 
 
 
-
 if __name__ == "__main__":
     app.run()

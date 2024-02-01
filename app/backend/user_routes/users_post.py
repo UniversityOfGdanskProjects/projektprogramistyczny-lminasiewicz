@@ -18,9 +18,9 @@ def post_user_login(tx, login, pwd) -> dict|None:
     hashed = tx.run(query).data()[0]["u.password"]
     if check_password(pwd, hashed):
         token = create_token(tx)
-        query2 = f"match (u:User) where u.username = \"{login}\" create (a:Authentication {{token: \"{token}\"}})-[:LOGS_IN]->(u)"
-        _ = tx.run(query2)
-        return {"username": login, "token": token}
+        query2 = f"match (u:User) where u.username = \"{login}\" create (a:Authentication {{token: \"{token}\"}})-[:LOGS_IN]->(u) return u.admin"
+        admin = tx.run(query2).data()[0]["u.admin"]
+        return {"username": login, "token": token, "admin": admin}
     return "Incorrect Password"
     
 

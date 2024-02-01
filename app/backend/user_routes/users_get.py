@@ -65,14 +65,14 @@ def get_users_search_route():
 def get_user_by_username(tx, username) -> dict:
     query = f"match (u:User) where u.username = \"{username}\" return u"
     results = tx.run(query).data()
-    return [{"username": result["u"]["username"], "link": result["u"]["link"], "registered": str(result["u"]["registered"])} for result in results]
+    return [{"username": result["u"]["username"], "link": result["u"]["link"], "registered": str(result["u"]["registered"]), "admin": result["u"]["admin"]} for result in results]
 
 
 @bp_uget.route("/api/users/user/<username>", methods=["GET"])
 def get_user_by_username_route(username):
-    posts = driver.session().execute_read(get_user_by_username, username)
+    user = driver.session().execute_read(get_user_by_username, username)
     print(f"Received a GET request on endpoint /api/users/user/{username}")
-    return {"users": posts}, 200
+    return {"user": user[0]}, 200
 
 
 
@@ -84,15 +84,15 @@ def get_user_activity(tx, username) -> int:
     if exists:
         query = f"match (u:User)-[:WROTE]-(c:Comment) where u.username = \"{username}\" return count(c) as comments"
         comments = tx.run(query).data()[0]["comments"]
-        query2 = f"match (u:User)-[:WROTE]-(c:Comment) return round(avg(count(c)), 2) as average"
+        query2 = f"match (u:User)-[:WROTE]-(c:Comment) return round(count(c)/count(u), 2) as average"
         average = tx.run(query2).data()[0]["average"]
         return round(comments - average, 2)
 
 
-@bp_uget.route("/api/users/<username>/activity", methods=["GET"])
+@bp_uget.route("/api/users/user/<username>/activity", methods=["GET"])
 def get_user_activity_route(username):
     score = driver.session().execute_read(get_user_activity, username)
-    print(f"Received a GET request on endpoint /api/users/{username}/activity")
+    print(f"Received a GET request on endpoint /api/users/user/{username}/activity")
     if score:
         return {"score": score}, 200
     return {}, 400
