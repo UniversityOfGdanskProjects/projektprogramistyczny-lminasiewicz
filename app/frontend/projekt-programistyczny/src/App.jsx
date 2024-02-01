@@ -11,6 +11,7 @@ import User from "./pages/User";
 import Posts from "./pages/Posts";
 import EditPost from "./pages/EditPost";
 import Post from "./pages/Post";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="posts" element={<Posts />} />
         <Route path="posts/:id" element={<Post />} />
         <Route path="posts/edit/:id" element={<EditPost />} />
+        <Route path="adminpanel" element={<AdminPanel />} />
       </Routes>
       <Footer/>
     </>

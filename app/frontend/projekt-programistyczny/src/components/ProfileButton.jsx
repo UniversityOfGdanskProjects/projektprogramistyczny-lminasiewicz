@@ -40,8 +40,8 @@ export default function ProfileButton({ user }) {
             {
                 dropdown &&
                 <div className="dropdown-menu">
-                    <div className="dropdown-item navbar-hover" onClick={() => navigate(`/user/${user}`)}><p>Page</p></div>
-                    <div className="dropdown-item navbar-hover" onClick={() => navigate(`/user/${user}/edit`)}><p>Edit Account</p></div>
+                    <div className="dropdown-item navbar-hover" onClick={() => navigate(`/users/${user}`)}><p>Page</p></div>
+                    <div className="dropdown-item navbar-hover" onClick={() => navigate(`/users/${user}/edit`)}><p>Edit Account</p></div>
                     <div className="dropdown-item navbar-hover" onClick={logOut}><p>Log Out</p></div>
                 </div>
             }

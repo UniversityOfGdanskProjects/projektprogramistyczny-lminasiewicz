@@ -60,16 +60,17 @@ export default function Posts() {
     const searchPosts = (vals) => {
         if (vals.before === "" && vals.after === "" && !tags.university && !tags.programming && !tags.personal && !tags.hobbies) {
             axios.get(`${DB_LINK}/api/posts`).then((res) => {
-                setPosts(res.data.users)
+                setPosts(res.data.posts)
             }).catch((err) => {
                 console.error(err);
             });
         }
         else {
             const arrTags = Object.keys(tags).filter((tag) => tags[tag] === true)
-            console.log(`${DB_LINK}/api/posts/filters?${vals.before == null? `before=${vals.before}` : ""}${vals.before == null? `&before=${vals.before}` : ""}&tags=${arrTags}`);
-            axios.get(`${DB_LINK}/api/posts/filters?${vals.before == null? `before=${vals.before}` : ""}${vals.before == null? `&before=${vals.before}` : ""}&tags=${arrTags}`).then((res) => {
-                setPosts(res.data.users)
+            console.log(vals.before, vals.after, arrTags);
+            axios.get(`${DB_LINK}/api/posts/filters?${vals.before == ""? "" : `before=${vals.before}`}&${vals.after == ""? "" : `after=${vals.after}`}&${arrTags == null? [] : `tags=${arrTags}`}`).then((res) => {
+                console.log(res.data.posts);
+                setPosts(res.data.posts)
             }).catch((err) => {
                 console.error(err);
             });
@@ -104,13 +105,13 @@ export default function Posts() {
                 <div className="post-searchbar">
                     <form className="form post-form" onSubmit={formik.handleSubmit}>
                         <label htmlFor="before">Before</label>
-                        <input type="text" id="phrase" {...formik.getFieldProps('before')} />
+                        <input type="text" id="before" {...formik.getFieldProps('before')} />
                         <label htmlFor="after">After</label>
-                        <input type="text" id="phrase" {...formik.getFieldProps('after')} />
+                        <input type="text" id="after" {...formik.getFieldProps('after')} />
                         <div className="flex-generic width50">
                             <input type="submit" value="Search" />
-                        {JSON.parse(localStorage.getItem("auth")).admin &&
-                            <div className="write-post" onClick={() => navigate("/posts/edit/-1")}><p>Write Post</p></div>
+                        {localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")).admin && 
+                        (<div className="write-post" onClick={() => navigate("/posts/edit/-1")}><p>Write Post</p></div>) : null
                         }
                         </div>
                         

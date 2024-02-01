@@ -743,3 +743,118 @@ textarea {
   border-radius: 1em;
   font-size: 2.5em;
 }
+
+
+.post-part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: lightgray;
+  background: linear-gradient(#101010, #101010, #101215, #10151a, #101a20);
+  
+  h2 {
+    font-size: 2em;
+  }
+
+  .post-content {
+    width: 80%;
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    line-height: 1.4em;
+    margin-bottom: 2em;
+  }
+
+  .post-data-wrapper {
+    padding: 1em;
+    width: 90%;
+    display: grid;
+    grid-template-columns: 60% 40%;
+
+    .rating-data {
+      width: 80%;
+      font-size: 1.5em;
+      
+      .rating {
+        margin-bottom: 0.5em;
+        font-size: 1.5em;
+      }
+    }
+
+    .post-data {
+      width: 80%;
+      align-self: flex-end;
+      font-size: 1.2em;
+      letter-spacing: 1px;
+      line-height: 1.4em;
+      margin-bottom: 1.5em;
+    }
+  }
+  
+}
+
+.comments-part {
+  margin-top: 2em;
+}
+
+
+.admin-wrapper {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  padding: 2em;
+  font-size: 2em;
+  color: lightgray;
+
+  .admin-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .admin-data-point {
+      margin: 1em;
+
+    }
+  }
+
+  .admin-actions {
+    display: grid;
+    grid-template-rows: repeat(2, 50%);
+    height: 100%;
+
+    .admin-action {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .btn-admin {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10em;
+        height: 3.5em;
+        background: linear-gradient(#206060, #206060, #1a5a5a, #105050, #0a4848);
+        color: white;
+        border-radius: 2em;
+        &:hover {
+          filter: brightness(1.2);
+        }
+      }
+    }
+  }
+}
+
+.comments {
+  width: 100%;
+
+  .post-comments-list {
+    list-style: none;
+  }
+  .comment-body {
+    padding-left: 1em;
+    padding-bottom: 0.5em;
+    margin: 0.5em;
+    width: 50em;
+    color: lightgray;
+    border: 1px solid #303030;
+    border-radius: 1em;
+  }
+}

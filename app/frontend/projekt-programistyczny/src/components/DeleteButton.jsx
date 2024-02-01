@@ -15,5 +15,7 @@ export default function DeleteButton({ id }) {
         })
     }
 
-    return JSON.parse(localStorage.getItem("auth")).admin && <div className="btn-admin btn-del flex-center" onClick={deletePost}>Delete</div>
+    return localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")).admin && 
+    <div className="btn-admin btn-del flex-center" onClick={deletePost}>Delete</div> : null
 }
+
